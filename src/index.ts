@@ -1,7 +1,7 @@
 import swaggerUi from 'swagger-ui-express';
 import express, { NextFunction, Request, Response } from 'express';
 import router from './routes';
-const swaggerFile = require('./swagger/swagger-output.json');
+import { swaggerOutput } from './swagger/swagger-output';
 
 const app = express();
 const port = 3000;
@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 });
 ;
 // Swagger setup
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
 app.use(express.json())
 app.use('/api', router);

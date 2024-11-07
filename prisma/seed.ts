@@ -9,7 +9,7 @@ async function main() {
         data: Array.from({ length: 10 }).map(() => ({
             name: faker.name.fullName(),
             email: faker.internet.email(),
-            password: faker.internet.password(),
+            password: "1234",
             role: faker.helpers.arrayElement(['admin', 'user']),
         })),
     });

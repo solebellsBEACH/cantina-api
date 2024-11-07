@@ -1,4 +1,4 @@
-{
+export const swaggerOutput = {
     "openapi": "3.0.0",
     "info": {
         "title": "Cantina & User API",

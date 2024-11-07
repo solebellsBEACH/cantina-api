@@ -8,7 +8,7 @@ export class UserController {
 
     async create(req: Request, res: Response) {
         const data: CreateUserDto = req.body;
-        const user = await this.userService.createUser({ ...data, role: 'admin' });
+        const user = await this.userService.createUser({ ...data, role: 'user' });
         res.status(201).json(user);
     }
 
