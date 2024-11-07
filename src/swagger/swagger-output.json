@@ -1,66 +1,141 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API da Cantina",
-        "version": "1.0.0",
-        "description": "API para gerenciar usuários, produtos, estabelecimentos e pedidos."
+        "title": "Cantina API",
+        "description": "API for managing products, establishments, and orders in a cantina.",
+        "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://localhost:3000/api",
-            "description": "Servidor local"
+            "url": "http://localhost:3000/api"
         }
     ],
     "paths": {
         "/products": {
             "get": {
-                "summary": "Obter todos os produtos",
-                "tags": [
-                    "Produtos"
+                "summary": "Get all products",
+                "description": "Retrieve all products with optional pagination and filtering by name, price, and establishment.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1
+                        },
+                        "description": "Page number for pagination."
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 1
+                        },
+                        "description": "Number of items per page."
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter products by name."
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Filter products by price."
+                    },
+                    {
+                        "name": "establishmentId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Filter products by establishment ID."
+                    }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Uma lista de produtos",
+                        "description": "List of products with pagination information.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Product"
-                                    }
+                                "example": {
+                                    "products": [
+                                        {
+                                            "id": 1,
+                                            "name": "Pizza",
+                                            "price": 15.99,
+                                            "description": "Delicious pizza",
+                                            "establishmentId": 1
+                                        },
+                                        {
+                                            "id": 2,
+                                            "name": "Burger",
+                                            "price": 8.99,
+                                            "description": "Tasty burger",
+                                            "establishmentId": 1
+                                        }
+                                    ],
+                                    "count": 25,
+                                    "totalPages": 3,
+                                    "next": "/products?page=2&limit=10",
+                                    "previous": null
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Invalid parameters."
                     }
                 }
             },
             "post": {
-                "summary": "Criar um novo produto",
-                "tags": [
-                    "Produtos"
-                ],
+                "summary": "Create a new product",
+                "description": "Create a new product with the provided details.",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Product"
+                                "$ref": "#/components/schemas/CreateProductDto"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Produto criado com sucesso"
+                        "description": "Product created successfully.",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "id": 1,
+                                    "name": "Pizza",
+                                    "price": 15.99,
+                                    "description": "Delicious pizza",
+                                    "establishmentId": 1
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/products/{id}": {
             "get": {
-                "summary": "Obter um produto pelo ID",
-                "tags": [
-                    "Produtos"
-                ],
+                "summary": "Get product by ID",
+                "description": "Retrieve a product by its unique ID.",
                 "parameters": [
                     {
                         "name": "id",
@@ -69,30 +144,32 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "description": "ID do produto"
+                        "description": "ID of the product to retrieve."
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Dados do produto",
+                        "description": "Product found.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Product"
+                                "example": {
+                                    "id": 1,
+                                    "name": "Pizza",
+                                    "price": 15.99,
+                                    "description": "Delicious pizza",
+                                    "establishmentId": 1
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Produto não encontrado"
+                        "description": "Product not found."
                     }
                 }
             },
             "put": {
-                "summary": "Atualizar um produto pelo ID",
-                "tags": [
-                    "Produtos"
-                ],
+                "summary": "Update a product",
+                "description": "Update product details by its ID.",
                 "parameters": [
                     {
                         "name": "id",
@@ -101,159 +178,42 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "description": "ID do produto"
+                        "description": "ID of the product to update."
                     }
                 ],
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Product"
+                                "$ref": "#/components/schemas/UpdateProductDto"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Produto atualizado com sucesso"
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Excluir um produto pelo ID",
-                "tags": [
-                    "Produtos"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "description": "ID do produto"
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Produto excluído com sucesso"
-                    }
-                }
-            }
-        },
-        "/users": {
-            "get": {
-                "summary": "Obter todos os usuários",
-                "tags": [
-                    "Usuários"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Uma lista de usuários",
+                        "description": "Product updated.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/User"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "summary": "Criar um novo usuário",
-                "tags": [
-                    "Usuários"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Usuário criado com sucesso"
-                    }
-                }
-            }
-        },
-        "/users/{id}": {
-            "get": {
-                "summary": "Obter um usuário pelo ID",
-                "tags": [
-                    "Usuários"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "description": "ID do usuário"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Dados do usuário",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User"
+                                "example": {
+                                    "id": 1,
+                                    "name": "Updated Pizza",
+                                    "price": 18.99,
+                                    "description": "Updated description",
+                                    "establishmentId": 1
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Usuário não encontrado"
-                    }
-                }
-            },
-            "put": {
-                "summary": "Atualizar um usuário pelo ID",
-                "tags": [
-                    "Usuários"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "description": "ID do usuário"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Usuário atualizado com sucesso"
+                        "description": "Product not found."
                     }
                 }
             },
             "delete": {
-                "summary": "Excluir um usuário pelo ID",
-                "tags": [
-                    "Usuários"
-                ],
+                "summary": "Delete a product",
+                "description": "Delete a product by its ID.",
                 "parameters": [
                     {
                         "name": "id",
@@ -262,12 +222,15 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "description": "ID do usuário"
+                        "description": "ID of the product to delete."
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Usuário excluído com sucesso"
+                        "description": "Product deleted successfully."
+                    },
+                    "404": {
+                        "description": "Product not found."
                     }
                 }
             }
@@ -275,29 +238,24 @@
     },
     "components": {
         "schemas": {
-            "Product": {
+            "CreateProductDto": {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "description": "ID do produto"
-                    },
                     "name": {
                         "type": "string",
-                        "description": "Nome do produto"
+                        "example": "Pizza"
                     },
                     "price": {
                         "type": "number",
-                        "format": "float",
-                        "description": "Preço do produto"
+                        "example": 15.99
                     },
                     "description": {
                         "type": "string",
-                        "description": "Descrição do produto"
+                        "example": "Delicious pizza"
                     },
                     "establishmentId": {
                         "type": "integer",
-                        "description": "ID do estabelecimento"
+                        "example": 1
                     }
                 },
                 "required": [
@@ -307,35 +265,31 @@
                     "establishmentId"
                 ]
             },
-            "User": {
+            "UpdateProductDto": {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "description": "ID do usuário"
-                    },
                     "name": {
                         "type": "string",
-                        "description": "Nome do usuário"
+                        "example": "Updated Pizza"
                     },
-                    "email": {
-                        "type": "string",
-                        "description": "Email do usuário"
+                    "price": {
+                        "type": "number",
+                        "example": 18.99
                     },
-                    "password": {
+                    "description": {
                         "type": "string",
-                        "description": "Senha do usuário"
+                        "example": "Updated description"
                     },
-                    "type": {
-                        "type": "string",
-                        "description": "Tipo de usuário"
+                    "establishmentId": {
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "required": [
                     "name",
-                    "email",
-                    "password",
-                    "type"
+                    "price",
+                    "description",
+                    "establishmentId"
                 ]
             }
         }

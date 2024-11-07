@@ -13,7 +13,20 @@ export class ProductController {
     }
 
     async getAll(req: Request, res: Response) {
-        res.json({ message: "Welcome to the Cantina API!" });
+        const page = parseInt(req.query.page as string) || 1; // Default to page 1 if not provided
+        const limit = parseInt(req.query.limit as string) || 10; // Default to 10 items per page if not provided
+        const name = req.query.name as string || undefined;
+        const price = req.query.price ? parseFloat(req.query.price as string) : undefined;
+        const establishmentId = req.query.establishmentId ? parseInt(req.query.establishmentId as string) : undefined;
+
+        const filters = {
+            name,
+            price,
+            establishmentId,
+        };
+
+        const result = await this.productService.getAllProducts(page, limit, filters);
+        res.json(result);
     }
 
     async getById(req: Request, res: Response) {
