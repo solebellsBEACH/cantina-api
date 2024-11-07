@@ -1,16 +1,14 @@
-import { Router, Request, Response } from 'express';
-import pool from './db';
+import { Router } from 'express';
+import { ProductController } from './core/controllers/products.controllers';
+import { ProductService } from './core/services/products.service';
 
-const router = Router();
+export const router = Router();
+const productController = new ProductController(new ProductService());
 
-router.get('/items', async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query('SELECT * FROM items');
-        res.json(result.rows);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Erro ao buscar items' });
-    }
-});
+// Product Routes
+router.post('/products', productController.create.bind(productController));
+router.get('/products', productController.getAll.bind(productController));
+router.get('/products/:id', productController.getById.bind(productController));
+router.put('/products/:id', productController.update.bind(productController));
+router.delete('/products/:id', productController.delete.bind(productController));
 
-export default router;

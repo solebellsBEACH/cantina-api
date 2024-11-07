@@ -1,19 +1,19 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import routes from './routes';
-import swaggerUi from 'swagger-ui-express';
-const swaggerFile = require('./swagger/swagger-output.json');
-
-dotenv.config();
+import express, { NextFunction, Request, Response } from 'express';
+import { router } from './routes';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
-app.use(express.json());
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-app.use('/api', routes);
+app.get('/', (req, res) => {
+    res.send('Hello, TypeScript Node Express!');
+});
+
+app.use('/api', router);
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    res.status(500).json({ message: err.message });
+});
 
 app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
-    console.log("API documentation: http://localhost:3000/docs");
+    console.log(`Server is running on port ${port}`);
 });

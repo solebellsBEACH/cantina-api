@@ -6,25 +6,25 @@ const prisma = new PrismaClient();
 
 export class ProductService {
     async createProduct(data: CreateProductDto) {
-        return prisma.produto.create({ data });
+        return prisma.product.create({ data });
     }
 
     async getAllProducts() {
-        return prisma.produto.findMany();
+        return prisma.product.findMany();
     }
 
     async getProductById(id: number) {
-        return prisma.produto.findUnique({ where: { id } });
+        return prisma.product.findUnique({ where: { id } });
     }
 
     async updateProduct(id: number, data: UpdateProductDto) {
-        return prisma.produto.update({
+        return prisma.product.update({
             where: { id },
             data,
         });
     }
 
     async deleteProduct(id: number) {
-        return prisma.produto.delete({ where: { id } });
+        return prisma.product.delete({ where: { id } });
     }
 }
