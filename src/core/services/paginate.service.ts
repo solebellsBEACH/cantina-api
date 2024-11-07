@@ -13,7 +13,7 @@ export interface PaginationResponse<T> {
 
 // Generic function for paginated queries
 export const getPaginatedResults = async <T>(
-    model: Prisma.ModelName,
+    model: any,
     page: number,
     limit: number,
     filters: Prisma.ProductWhereInput
@@ -21,12 +21,12 @@ export const getPaginatedResults = async <T>(
     const skip = (page - 1) * limit; // Pagination logic: skip records
 
     const [items, totalCount] = await prisma.$transaction([
-        prisma[model].findMany({
+        model.findMany({
             where: filters,
             skip,
             take: limit,
         }),
-        prisma[model].count({ where: filters }),
+        model.count({ where: filters }),
     ]);
 
     const totalPages = Math.ceil(totalCount / limit); // Calculate total pages
