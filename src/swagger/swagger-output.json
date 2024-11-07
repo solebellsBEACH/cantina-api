@@ -1,38 +1,342 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Minha API Express com Swagger",
+        "title": "API da Cantina",
         "version": "1.0.0",
-        "description": "Documentação da API para a aplicação Express com TypeScript"
+        "description": "API para gerenciar usuários, produtos, estabelecimentos e pedidos."
     },
     "servers": [
         {
-            "url": "http://localhost:3000",
+            "url": "http://localhost:3000/api",
             "description": "Servidor local"
         }
     ],
     "paths": {
-        "/example": {
+        "/products": {
             "get": {
-                "summary": "Exemplo de endpoint GET",
+                "summary": "Obter todos os produtos",
+                "tags": [
+                    "Produtos"
+                ],
                 "responses": {
                     "200": {
-                        "description": "Resposta de sucesso",
+                        "description": "Uma lista de produtos",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Olá, mundo!"
-                                        }
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
                                     }
                                 }
                             }
                         }
                     }
                 }
+            },
+            "post": {
+                "summary": "Criar um novo produto",
+                "tags": [
+                    "Produtos"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Produto criado com sucesso"
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "summary": "Obter um produto pelo ID",
+                "tags": [
+                    "Produtos"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID do produto"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do produto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Produto não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualizar um produto pelo ID",
+                "tags": [
+                    "Produtos"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID do produto"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Produto atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir um produto pelo ID",
+                "tags": [
+                    "Produtos"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID do produto"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Produto excluído com sucesso"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "summary": "Obter todos os usuários",
+                "tags": [
+                    "Usuários"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Uma lista de usuários",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Criar um novo usuário",
+                "tags": [
+                    "Usuários"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado com sucesso"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "summary": "Obter um usuário pelo ID",
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID do usuário"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualizar um usuário pelo ID",
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID do usuário"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir um usuário pelo ID",
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID do usuário"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Usuário excluído com sucesso"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Product": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID do produto"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nome do produto"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Preço do produto"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Descrição do produto"
+                    },
+                    "establishmentId": {
+                        "type": "integer",
+                        "description": "ID do estabelecimento"
+                    }
+                },
+                "required": [
+                    "name",
+                    "price",
+                    "description",
+                    "establishmentId"
+                ]
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID do usuário"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nome do usuário"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email do usuário"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Senha do usuário"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Tipo de usuário"
+                    }
+                },
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "type"
+                ]
             }
         }
     }
