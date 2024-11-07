@@ -6,6 +6,7 @@ import { getPaginatedResults, PaginationResponse } from './paginate.service';
 const prisma = new PrismaClient();
 
 export class ProductService {
+
     async createProduct(data: CreateProductDto) {
         return prisma.product.create({ data });
     }
@@ -17,7 +18,6 @@ export class ProductService {
             ...(filters.establishmentId && { establishmentId: filters.establishmentId })
         };
 
-        // Use the generic pagination function for fetching products
         return getPaginatedResults<Prisma.$ProductPayload>(prisma.product, page, limit, where);
     }
 

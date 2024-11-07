@@ -4,13 +4,18 @@ import { faker } from '@faker-js/faker';
 const prisma = new PrismaClient();
 
 async function main() {
-
     await prisma.user.createMany({
         data: Array.from({ length: 10 }).map(() => ({
             name: faker.name.fullName(),
             email: faker.internet.email(),
             password: "1234",
             role: faker.helpers.arrayElement(['admin', 'user']),
+        })),
+    });
+
+    await prisma.category.createMany({
+        data: ["bebidas", "doces", "salgados"].map(name => ({
+            name
         })),
     });
 
@@ -21,18 +26,17 @@ async function main() {
         })),
     });
 
+    const createdCategories = await prisma.category.findMany();
     const createdEstablishments = await prisma.establishment.findMany();
 
     for (const establishment of createdEstablishments) {
         await prisma.product.createMany({
             data: Array.from({ length: 4 }).map(() => ({
                 name: faker.commerce.productName(),
-                price: parseFloat(faker.commerce.price({
-                    max: 40,
-                    min: 1
-                })),
+                price: parseFloat(faker.commerce.price({ max: 40, min: 1 })),
                 description: faker.commerce.productDescription(),
                 establishmentId: establishment.id,
+                categoryId: faker.helpers.arrayElement(createdCategories)?.id || 1,
             })),
         });
     }
@@ -48,7 +52,7 @@ async function main() {
                 productId: randomProduct.id,
                 status: faker.helpers.arrayElement(['Pending', 'Completed', 'Canceled']),
                 qrCode: faker.string.uuid(),
-                orderDateTime: faker.date.anytime()
+                orderDateTime: faker.date.anytime(),
             },
         });
     }

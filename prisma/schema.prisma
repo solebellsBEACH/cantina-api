@@ -18,14 +18,24 @@ model User {
   @@map("user")
 }
 
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[] @relation("CategoryProducts")
+
+  @@map("category")
+}
+
 model Product {
   id              Int           @id @default(autoincrement())
   name            String
   price           Float
   description     String
+  categoryId      Int
+  category        Category      @relation("CategoryProducts", fields: [categoryId], references: [id])
+  orders          Order[]       @relation("ProductOrders")
   establishmentId Int
   establishment   Establishment @relation("ProductEstablishment", fields: [establishmentId], references: [id])
-  orders          Order[]       @relation("ProductOrders")
 
   @@map("product")
 }

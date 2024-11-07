@@ -3,5 +3,6 @@ export class CreateProductDto {
     price!: number;
     description!: string;
     establishmentId!: number;
+    categoryId!: number;
 }
 
