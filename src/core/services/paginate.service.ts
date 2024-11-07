@@ -19,7 +19,6 @@ export const getPaginatedResults = async <T>(
     filters: Prisma.ProductWhereInput
 ): Promise<PaginationResponse<T>> => {
     const skip = (page - 1) * limit; // Pagination logic: skip records
-
     const [items, totalCount] = await prisma.$transaction([
         model.findMany({
             where: filters,

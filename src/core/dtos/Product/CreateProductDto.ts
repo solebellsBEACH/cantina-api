@@ -4,5 +4,6 @@ export class CreateProductDto {
     description!: string;
     establishmentId!: number;
     categoryId!: number;
+    image_url!: string;
 }
 

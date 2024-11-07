@@ -3,6 +3,11 @@ import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
+const imageList = [
+    'https://img.irroba.com.br/fit-in/600x600/filters:fill(fff):quality(80)/aironcom/catalog/amendoim/pacocas/pacoca-fundo-branco.jpg',
+
+]
+
 async function main() {
     await prisma.user.createMany({
         data: Array.from({ length: 10 }).map(() => ({
@@ -37,6 +42,7 @@ async function main() {
                 description: faker.commerce.productDescription(),
                 establishmentId: establishment.id,
                 categoryId: faker.helpers.arrayElement(createdCategories)?.id || 1,
+                image_url: faker.helpers.arrayElement(imageList)
             })),
         });
     }
