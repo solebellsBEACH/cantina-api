@@ -1,40 +1,31 @@
-// src/services/paginationService.ts
-import { PrismaClient, Prisma } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 export interface PaginationResponse<T> {
-    items: T[];
-    count: number;
-    totalPages: number;
-    next: string | null;
-    previous: string | null;
+    data: T[];       // Lista de resultados paginados
+    page: number;    // Página atual
+    limit: number;   // Número de itens por página
+    total: number;   // Total de itens encontrados
 }
 
-// Generic function for paginated queries
-export const getPaginatedResults = async <T>(
-    model: any,
+export async function getPaginatedResults<T, WhereInput>(
+    model: { findMany: (args: { where?: WhereInput; skip?: number; take?: number }) => Promise<T[]>; count: (args: { where?: WhereInput }) => Promise<number> },
     page: number,
     limit: number,
-    filters: Prisma.ProductWhereInput
-): Promise<PaginationResponse<T>> => {
-    const skip = (page - 1) * limit; // Pagination logic: skip records
-    const [items, totalCount] = await prisma.$transaction([
+    where: WhereInput
+): Promise<PaginationResponse<T>> {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
         model.findMany({
-            where: filters,
+            where,
             skip,
             take: limit,
         }),
-        model.count({ where: filters }),
+        model.count({ where }),
     ]);
 
-    const totalPages = Math.ceil(totalCount / limit); // Calculate total pages
-
     return {
-        items,
-        count: totalCount,
-        totalPages,
-        next: page < totalPages ? `/products?page=${page + 1}&limit=${limit}` : null,
-        previous: page > 1 ? `/products?page=${page - 1}&limit=${limit}` : null,
+        data,
+        page,
+        limit,
+        total,
     };
-};
+}

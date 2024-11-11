@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma, Product } from '@prisma/client';
 import { CreateProductDto } from '../dtos/Product/CreateProductDto';
 import { UpdateProductDto } from '../dtos/Product/UpdateProductDto';
 import { getPaginatedResults, PaginationResponse } from './paginate.service';
@@ -10,17 +10,19 @@ export class ProductService {
     async createProduct(data: CreateProductDto) {
         return prisma.product.create({ data });
     }
-
-    async getAllProducts(page: number, limit: number, filters: { name?: string, price?: number, establishmentId?: number }): Promise<PaginationResponse<Prisma.$ProductPayload>> {
+    async getAllProducts(
+        page: number,
+        limit: number,
+        filters: { name?: string; price?: number; establishmentId?: number }
+    ): Promise<PaginationResponse<Product>> {
         const where: Prisma.ProductWhereInput = {
             ...(filters.name && { name: { contains: filters.name, mode: 'insensitive' } }),
             ...(filters.price && { price: filters.price }),
-            ...(filters.establishmentId && { establishmentId: filters.establishmentId })
+            ...(filters.establishmentId && { establishmentId: filters.establishmentId }),
         };
 
-        return getPaginatedResults<Prisma.$ProductPayload>(prisma.product, page, limit, where);
+        return getPaginatedResults<Product, {}>(prisma.product, page, limit, where);
     }
-
     async getProductById(id: number) {
         return prisma.product.findUnique({ where: { id } });
     }

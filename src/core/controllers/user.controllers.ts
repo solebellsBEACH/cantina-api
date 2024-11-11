@@ -12,15 +12,14 @@ export class UserController {
         res.status(201).json(user);
     }
 
-    // async getById(req: Request, res: Response) {
-    //     const id = parseInt(req.params.id);
-    //     const user = await this.userService.getUserById(id);
-    //     if (user) {
-    //         res.json(user);
-    //     } else {
-    //         res.status(404).send('User not found');
-    //     }
-    // }
+    async getUser(req: Request, res: Response) {
+        const user = await this.userService.getUser(req.query || {});
+        if (user) {
+            res.json({ user });
+        } else {
+            res.status(404).send('User not found');
+        }
+    }
 
     async update(req: Request, res: Response) {
         const id = parseInt(req.params.id);
@@ -34,4 +33,11 @@ export class UserController {
         await this.userService.deleteUser(id);
         res.status(204).send();
     }
+
+    async buyFood(req: Request, res: Response) {
+        const id = parseInt(req.params.id);
+        await this.userService.buyFood(id)
+        res.status(204).send();
+    }
+
 }

@@ -31,9 +31,9 @@ export class UserService {
         };
     }
 
-    async getUserById(id: number) {
+    async getUser(params: any) {
         return prisma.user.findUnique({
-            where: { id },
+            where: params,
         });
     }
 
@@ -48,5 +48,12 @@ export class UserService {
         return prisma.user.delete({
             where: { id },
         });
+    }
+
+    async buyFood(productId: number) {
+        prisma.product.delete({
+            where: { id: productId },
+        });
+        return {}
     }
 }

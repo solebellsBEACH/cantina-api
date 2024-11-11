@@ -1,5 +1,6 @@
 import { categories } from "./categories";
 import { components } from "./components";
+import { orders } from "./order";
 import { products } from "./products";
 import { users } from "./users";
 
@@ -18,7 +19,8 @@ export const swaggerOutput = {
     paths: {
         ...products,
         ...users,
-        ...categories
+        ...categories,
+        ...orders
     },
     components
 };
